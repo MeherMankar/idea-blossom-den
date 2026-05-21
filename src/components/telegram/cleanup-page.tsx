@@ -51,52 +51,53 @@ export function CleanupPage({ isOpen, onClose }: CleanupPageProps) {
 
   return (
     <div
+      style={{ zIndex: 70 }}
       className={cn(
-        "fixed inset-0 z-50 bg-background transition-transform duration-300 ease-in-out max-w-md mx-auto",
+        "fixed top-0 right-0 h-screen w-full max-w-md bg-[#17212b] flex flex-col transition-transform duration-300 ease-in-out",
         isOpen ? "translate-x-0" : "translate-x-full"
       )}
     >
       {/* Header */}
-      <header className="sticky top-0 z-10 bg-primary px-4 py-4 flex items-center gap-4">
+      <header className="flex items-center gap-4 px-4 py-3 bg-[#17212b] border-b border-white/10">
         <button
           onClick={onClose}
-          className="p-2 -ml-2 text-primary-foreground/80 hover:text-primary-foreground transition-colors"
+          className="p-2 -ml-2 text-gray-400 hover:text-white transition-colors"
           aria-label="Go back"
         >
           <ArrowLeft className="h-6 w-6" />
         </button>
-        <h1 className="text-lg font-semibold text-primary-foreground">Cleanup</h1>
+        <h1 className="text-xl font-medium text-white">Cleanup</h1>
       </header>
 
       {/* Content */}
-      <div className="flex flex-col h-[calc(100%-64px)]">
+      <div className="flex-1 overflow-y-auto">
         {/* Question Header */}
-        <div className="px-4 py-4 border-b border-border/50">
-          <p className="text-base font-semibold text-foreground flex items-center gap-3">
-            <Trash2 className="h-5 w-5 text-destructive" />
+        <div className="px-4 py-4 border-b border-white/10">
+          <p className="text-base font-semibold text-white flex items-center gap-3">
+            <Trash2 className="h-5 w-5 text-red-500" />
             What would you like to clean?
           </p>
         </div>
 
         {/* Cleanup Items List */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1">
           <ul role="list">
             {cleanupItems.map(({ icon: Icon, label, description }) => (
-              <li key={label} className="border-b border-border/30">
+              <li key={label} className="border-b border-white/10">
                 <button
                   onClick={() => handleCleanupAction(label)}
-                  className="w-full flex items-center gap-4 px-4 py-4 hover:bg-secondary/50 transition-colors group active:bg-secondary/70"
+                  className="w-full flex items-center gap-4 px-4 py-4 hover:bg-white/5 transition-colors group"
                 >
                   <Icon className={cn(
                     "h-6 w-6 transition-colors flex-shrink-0",
-                    label === "all" ? "text-destructive" : "text-muted-foreground group-hover:text-foreground"
+                    label === "all" ? "text-red-500" : "text-gray-400 group-hover:text-white"
                   )} />
                   <div className="flex-1 text-left">
                     <span className={cn(
                       "text-[15px] font-semibold block",
-                      label === "all" ? "text-destructive" : "text-foreground"
+                      label === "all" ? "text-red-500" : "text-white"
                     )}>{label}</span>
-                    <span className="text-[13px] text-muted-foreground">{description}</span>
+                    <span className="text-[13px] text-gray-400">{description}</span>
                   </div>
                 </button>
               </li>
@@ -105,10 +106,10 @@ export function CleanupPage({ isOpen, onClose }: CleanupPageProps) {
         </div>
 
         {/* Warning Footer */}
-        <div className="px-4 py-4 border-t border-border/50 bg-card">
-          <div className="flex items-center gap-3 px-4 py-3 bg-destructive/10 rounded-lg">
-            <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0" />
-            <p className="text-sm text-destructive font-medium">
+        <div className="px-4 py-4 border-t border-white/10">
+          <div className="flex items-center gap-3 px-4 py-3 bg-red-500/10 border border-red-500/30 rounded-lg">
+            <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0" />
+            <p className="text-sm text-red-400 font-medium">
               These actions cannot be undone!
             </p>
           </div>
