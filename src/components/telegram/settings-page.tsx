@@ -6,22 +6,15 @@ import {
   Camera,
   ChevronRight,
   Settings as SettingsIcon,
-  Palette,
-  Download,
   Users,
   User as UserIcon,
   MessageCircle,
   KeyRound,
   Bell,
-  PieChart,
   Folder,
   Monitor,
-  BatteryLow,
   Globe,
   Star,
-  Wallet,
-  Store,
-  Gift,
   MessageSquare,
   HelpCircle,
   Lightbulb,
@@ -44,9 +37,6 @@ type Row = {
 }
 
 const plusItems: Row[] = [
-  { icon: SettingsIcon, label: "Plus Settings", iconBg: "bg-sky-500" },
-  { icon: Palette, label: "Plus Theming", iconBg: "bg-orange-500" },
-  { icon: Palette, label: "Download themes", iconBg: "bg-rose-500" },
   { icon: Users, label: "Support group", iconBg: "bg-sky-500" },
 ]
 
@@ -54,19 +44,9 @@ const mainItems: Row[] = [
   { icon: UserIcon, label: "Account", subtitle: "Number, Username, Bio", iconBg: "bg-sky-500" },
   { icon: MessageCircle, label: "Chat Settings", subtitle: "Wallpaper, Night Mode, Animations", iconBg: "bg-orange-500" },
   { icon: KeyRound, label: "Privacy & Security", subtitle: "Last Seen, Devices, Passkeys", iconBg: "bg-emerald-500" },
-  { icon: Bell, label: "Notifications", subtitle: "Sounds, Calls, Badges", iconBg: "bg-rose-500" },
-  { icon: PieChart, label: "Data and Storage", subtitle: "Media download settings", iconBg: "bg-sky-500" },
   { icon: Folder, label: "Chat Folders", subtitle: "Sort chats into folders", iconBg: "bg-sky-500" },
   { icon: Monitor, label: "Devices", subtitle: "Manage connected devices", iconBg: "bg-cyan-500" },
-  { icon: BatteryLow, label: "Power Saving", subtitle: "Reduce power usage on low charge", iconBg: "bg-orange-500" },
   { icon: Globe, label: "Language", subtitle: "English", iconBg: "bg-violet-500" },
-]
-
-const premiumItems: Row[] = [
-  { icon: Star, label: "Telegram Premium", iconBg: "bg-violet-500" },
-  { icon: Wallet, label: "Wallet", iconBg: "bg-sky-500" },
-  { icon: Store, label: "Telegram Business", iconBg: "bg-rose-500" },
-  { icon: Gift, label: "Send a Gift", iconBg: "bg-orange-500" },
 ]
 
 const helpItems: Row[] = [
@@ -202,12 +182,6 @@ export function SettingsPage({ isOpen, onClose }: SettingsPageProps) {
           ))}
         </SectionCard>
 
-        {/* Premium */}
-        <SectionCard>
-          {premiumItems.map((r, i) => (
-            <SettingsRow key={r.label} row={r} last={i === premiumItems.length - 1} />
-          ))}
-        </SectionCard>
 
         {/* Help */}
         <SectionCard label="Help">
