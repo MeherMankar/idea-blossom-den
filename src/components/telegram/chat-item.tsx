@@ -92,6 +92,6 @@ export function ChatItem({
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   )
 }
