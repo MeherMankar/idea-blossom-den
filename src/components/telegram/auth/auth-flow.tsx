@@ -1,5 +1,4 @@
-
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { QRLoginPage } from "./qr-login-page"
 import { PhoneLoginPage } from "./phone-login-page"
 import { OTPPage } from "./otp-page"
@@ -17,17 +16,10 @@ export function AuthFlow({ isOpen, onClose, onSuccess }: AuthFlowProps) {
   const [step, setStep] = useState<AuthStep>(null)
   const [phoneNumber, setPhoneNumber] = useState("")
 
-  // Reset to QR page when opening
-  const handleOpen = () => {
-    if (isOpen && step === null) {
-      setStep("qr")
-    }
-  }
-
-  // Call handleOpen when isOpen changes
-  if (isOpen && step === null) {
-    setStep("qr")
-  }
+  // Reset to QR page when opening (effect, not during render)
+  useEffect(() => {
+    if (isOpen && step === null) setStep("qr")
+  }, [isOpen, step])
 
   const handleClose = () => {
     setStep(null)
@@ -43,15 +35,12 @@ export function AuthFlow({ isOpen, onClose, onSuccess }: AuthFlowProps) {
 
   return (
     <>
-      {/* QR Login Page */}
       <QRLoginPage
         isOpen={isOpen && step === "qr"}
         onClose={handleClose}
         onPhoneLogin={() => setStep("phone")}
         onQRScanned={() => setStep("password")}
       />
-
-      {/* Phone Login Page */}
       <PhoneLoginPage
         isOpen={isOpen && step === "phone"}
         onBack={() => setStep("qr")}
@@ -61,15 +50,11 @@ export function AuthFlow({ isOpen, onClose, onSuccess }: AuthFlowProps) {
         }}
         onQRLogin={() => setStep("qr")}
       />
-
-      {/* OTP Page */}
       <OTPPage
         isOpen={isOpen && step === "otp"}
         phoneNumber={phoneNumber}
         onNext={() => setStep("password")}
       />
-
-      {/* Cloud Password Page */}
       <CloudPasswordPage
         isOpen={isOpen && step === "password"}
         onSubmit={handleSuccess}
