@@ -208,14 +208,14 @@ export function SettingsPage({ isOpen, onClose }: SettingsPageProps) {
         {/* Plus group */}
         <SectionCard>
           {plusItems.map((r, i) => (
-            <SettingsRow key={r.label} row={r} last={i === plusItems.length - 1} />
+            <SettingsRow key={r.label} row={r} last={i === plusItems.length - 1} onClick={() => openRow(r.label)} />
           ))}
         </SectionCard>
 
         {/* Main settings */}
         <SectionCard>
           {mainItems.map((r, i) => (
-            <SettingsRow key={r.label} row={r} last={i === mainItems.length - 1} />
+            <SettingsRow key={r.label} row={r} last={i === mainItems.length - 1} onClick={() => openRow(r.label)} />
           ))}
         </SectionCard>
 
@@ -223,7 +223,7 @@ export function SettingsPage({ isOpen, onClose }: SettingsPageProps) {
         {/* Help */}
         <SectionCard label="Help">
           {helpItems.map((r, i) => (
-            <SettingsRow key={r.label} row={r} last={i === helpItems.length - 1} />
+            <SettingsRow key={r.label} row={r} last={i === helpItems.length - 1} onClick={() => openRow(r.label)} />
           ))}
         </SectionCard>
 
