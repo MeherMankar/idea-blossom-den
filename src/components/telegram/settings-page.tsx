@@ -4,7 +4,7 @@ import {
   ArrowLeft,
   Search,
   MoreVertical,
-  CameraPlus,
+  
   Send,
   Heart,
   MessageCircle,
