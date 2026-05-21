@@ -14,17 +14,21 @@ export interface Chat {
   lastSeen?: string
   userId?: string
   birthday?: string
+  isOnline?: boolean
+  isVerified?: boolean
+  messageType?: "text" | "photo" | "sticker" | "video" | "link"
 }
 
 export const chats: Chat[] = [
-  { id: "1", avatar: "", name: "Saved Messages", preview: "Photo", time: "Sat", isPinned: true, isRead: true, avatarColor: "bg-sky-500", lastSeen: "you" },
-  { id: "2", avatar: "", name: "HubNews Discussion!!!", preview: "6002", time: "Wed", unreadCount: 121, isMuted: true, avatarColor: "bg-emerald-600", lastSeen: "last seen recently" },
-  { id: "3", avatar: "", name: "Random Mirror Area", preview: "REMOVE STREAM SETTINGS ~...", time: "Wed", unreadCount: 282, isMuted: true, avatarColor: "bg-violet-500", lastSeen: "last seen recently" },
-  { id: "4", avatar: "", name: "Stark Music Hub", preview: "scloudhorizonmusicbot: Do...", time: "Wed", unreadCount: 236600, isMuted: true, avatarColor: "bg-sky-600", lastSeen: "last seen recently" },
-  { id: "5", avatar: "", name: "Sharayu", preview: "Ky he", time: "Wed", unreadCount: 1, senderPrefix: "You", isRead: true, avatarColor: "bg-amber-500", username: "@ItzSharayu_Mokalekar", lastSeen: "last seen yesterday at 10:25 PM", userId: "1697623567", birthday: "2003-08-23" },
-  { id: "6", avatar: "", name: "TempNum Official Chat", preview: "Koi proxxy bata do??", time: "Wed", unreadCount: 38000, isMuted: true, avatarColor: "bg-rose-500", lastSeen: "last seen recently" },
-  { id: "7", avatar: "", name: "HubNews!!!", preview: "Dorohedoro 2026 — S0...", time: "Wed", unreadCount: 34, isMuted: true, avatarColor: "bg-indigo-500", lastSeen: "last seen recently" },
-  { id: "8", avatar: "", name: "DDoSia Project", preview: "Ну по-моему тебе на aifory pro ну...", time: "Wed", avatarColor: "bg-slate-600", lastSeen: "last seen recently" },
+  { id: "1", avatar: "", name: "Chinki 🥴", preview: "Photo", time: "4:07 PM", isRead: true, avatarColor: "bg-pink-500", isOnline: true, messageType: "photo" },
+  { id: "2", avatar: "", name: "Rashi Kolpyakwar", preview: "Sticker", time: "4:05 PM", isRead: true, isMuted: true, avatarColor: "bg-green-500", isOnline: true, messageType: "sticker" },
+  { id: "3", avatar: "", name: "Sanika Ramteke", preview: "Sticker", time: "4:04 PM", isRead: true, isMuted: true, avatarColor: "bg-green-500", isOnline: true, messageType: "sticker" },
+  { id: "4", avatar: "", name: "Sharayu", preview: "2 photos", time: "1:39 PM", isRead: true, avatarColor: "bg-amber-500", isOnline: true, messageType: "photo" },
+  { id: "5", avatar: "", name: "ṜÜƧӇṀɅX 🔥 #GUJ...", preview: "https://explicitexchange.netlify.app/", time: "12:34 PM", isRead: true, isMuted: true, avatarColor: "bg-rose-600", messageType: "link" },
+  { id: "6", avatar: "", name: "DB9", preview: "Id mil gai wapas?", time: "8:36 AM", isRead: true, isMuted: true, avatarColor: "bg-slate-600", isOnline: true, messageType: "text" },
+  { id: "7", avatar: "", name: "kasuro Giya", preview: "Hiii", time: "Wed", isRead: true, avatarColor: "bg-pink-500", isOnline: true, messageType: "text" },
+  { id: "8", avatar: "", name: "Telegram Notifications", preview: "Login code: 🎉🎊. Do not give this co...", time: "Tue", avatarColor: "bg-pink-500", isVerified: true, messageType: "text" },
+  { id: "9", avatar: "", name: "Ambivert", preview: "Photo", time: "Tue", avatarColor: "bg-purple-500", isOnline: true, messageType: "photo" },
 ]
 
 export interface ChatMessage {
@@ -41,7 +45,7 @@ export interface ChatMessage {
 }
 
 export const chatMessages: Record<string, ChatMessage[]> = {
-  "5": [
+  "4": [
     { id: "m1", type: "image", content: "", time: "8:01 PM", isOutgoing: false, imageUrl: "photo1" },
     { id: "m2", type: "video", content: "", time: "8:02 PM", isOutgoing: false, videoDuration: "0:39", videoSize: "4.8 MB", imageUrl: "video1" },
     { id: "m3", type: "reply", content: "Ky he", time: "10:24 PM", isOutgoing: false, replyTo: { name: "मेहर मानकर", content: "Video", nameColor: "text-orange-400" } },
