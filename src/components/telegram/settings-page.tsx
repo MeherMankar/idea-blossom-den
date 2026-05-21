@@ -189,12 +189,6 @@ export function SettingsPage({ isOpen, onClose }: SettingsPageProps) {
           ))}
         </SectionCard>
 
-        {/* Premium */}
-        <SectionCard>
-          {premiumItems.map((r, i) => (
-            <SettingsRow key={r.label} row={r} last={i === premiumItems.length - 1} />
-          ))}
-        </SectionCard>
 
         {/* Help */}
         <SectionCard label="Help">
