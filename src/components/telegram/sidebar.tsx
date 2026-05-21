@@ -13,6 +13,15 @@ import {
   Folder,
   Shield,
   Skull,
+  Trash2,
+  MessageSquare,
+  Bot,
+  Send,
+  AlertCircle,
+  Mail,
+  LogOut,
+  Radio,
+  Flame,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useUser } from "@/contexts/user-context"
@@ -26,6 +35,7 @@ interface SidebarProps {
   onContactsClick: () => void
   onProtectionManagerClick: () => void
   onSpamMasterClick: () => void
+  onCleanupClick: (cleanupType: string) => void
 }
 
 const navItems = [
@@ -43,7 +53,20 @@ const navItems = [
   { icon: Skull, label: "Spam Master", badge: null },
 ]
 
-export function Sidebar({ isOpen, onClose, onProfileClick, onAddAccountClick, onSettingsClick, onContactsClick, onProtectionManagerClick, onSpamMasterClick }: SidebarProps) {
+const cleanupItems = [
+  { icon: MessageSquare, label: "personal", description: "Direct messages with users" },
+  { icon: Bot, label: "bots", description: "Conversations with bots" },
+  { icon: Send, label: "telegram", description: "Telegram service chats" },
+  { icon: AlertCircle, label: "spambot", description: "@spambot conversations" },
+  { icon: Mail, label: "my_messages", description: "Delete your sent messages from groups" },
+  { icon: LogOut, label: "channels", description: "Leave all channels" },
+  { icon: Users, label: "groups", description: "Leave all groups" },
+  { icon: Trash2, label: "owned_groups", description: "Delete groups you own" },
+  { icon: Radio, label: "owned_channels", description: "Delete channels you own" },
+  { icon: Flame, label: "all", description: "Everything above" },
+]
+
+export function Sidebar({ isOpen, onClose, onProfileClick, onAddAccountClick, onSettingsClick, onContactsClick, onProtectionManagerClick, onSpamMasterClick, onCleanupClick }: SidebarProps) {
   const { profile } = useUser()
 
   // Lock body scroll when sidebar is open
@@ -149,6 +172,47 @@ export function Sidebar({ isOpen, onClose, onProfileClick, onAddAccountClick, on
               </li>
             ))}
           </ul>
+
+          {/* Cleanup Section */}
+          <div className="mt-4 border-t border-border/50 pt-4">
+            <div className="px-6 pb-3">
+              <p className="text-sm font-semibold text-foreground flex items-center gap-2">
+                <Trash2 className="h-4 w-4 text-destructive" />
+                What would you like to clean?
+              </p>
+            </div>
+            <ul role="list">
+              {cleanupItems.map(({ icon: Icon, label, description }) => (
+                <li key={label}>
+                  <button
+                    onClick={() => {
+                      onClose()
+                      onCleanupClick(label)
+                    }}
+                    className="w-full flex items-center gap-4 px-6 py-3 hover:bg-destructive/10 transition-colors group active:bg-destructive/20"
+                  >
+                    <Icon className={cn(
+                      "h-5 w-5 transition-colors flex-shrink-0",
+                      label === "all" ? "text-destructive" : "text-muted-foreground group-hover:text-destructive"
+                    )} />
+                    <div className="flex-1 text-left">
+                      <span className={cn(
+                        "text-[14px] font-medium block",
+                        label === "all" ? "text-destructive" : "text-foreground"
+                      )}>{label}</span>
+                      <span className="text-[12px] text-muted-foreground">{description}</span>
+                    </div>
+                  </button>
+                </li>
+              ))}
+            </ul>
+            <div className="px-6 py-3 mt-2 mx-4 bg-destructive/10 rounded-lg">
+              <p className="text-xs text-destructive font-medium flex items-center gap-2">
+                <AlertCircle className="h-4 w-4" />
+                These actions cannot be undone!
+              </p>
+            </div>
+          </div>
         </nav>
       </aside>
     </>
