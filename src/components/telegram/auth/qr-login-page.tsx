@@ -47,12 +47,13 @@ export function QRLoginPage({ isOpen, onClose, onPhoneLogin, onQRScanned }: QRLo
             
             {/* Middle rows - simplified */}
             {Array.from({ length: 21 }).map((_, i) => (
-              <div 
-                key={i} 
+              <div
+                key={i}
                 className={cn(
                   "rounded-[1px]",
-                  Math.random() > 0.5 ? "bg-black" : "bg-transparent"
-                )} 
+                  // deterministic pseudo-random pattern (SSR-safe)
+                  ((i * 2654435761) >>> 0) % 2 === 0 ? "bg-black" : "bg-transparent"
+                )}
               />
             ))}
             
