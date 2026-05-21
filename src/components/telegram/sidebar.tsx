@@ -1,0 +1,143 @@
+
+import { useEffect } from "react"
+import {
+  X,
+  UserCircle2,
+  Users,
+  BookMarked,
+  Phone,
+  Settings,
+  HelpCircle,
+  Megaphone,
+  Plus,
+  Wallet,
+  Folder,
+  ChevronRight,
+} from "lucide-react"
+import { cn } from "@/lib/utils"
+import { useUser } from "@/contexts/user-context"
+
+interface SidebarProps {
+  isOpen: boolean
+  onClose: () => void
+  onProfileClick: () => void
+  onAddAccountClick: () => void
+  onSettingsClick: () => void
+}
+
+const navItems = [
+  { icon: Plus, label: "Add Account", badge: null },
+  { icon: UserCircle2, label: "My Profile", badge: null },
+  { icon: Wallet, label: "Wallet", badge: null },
+  { icon: Users, label: "New Group", badge: null },
+  { icon: Megaphone, label: "New Channel", badge: null },
+  { icon: UserCircle2, label: "Contacts", badge: null },
+  { icon: Folder, label: "Chat Folders", badge: null },
+  { icon: BookMarked, label: "Saved Messages", badge: null },
+  { icon: Phone, label: "Calls", badge: null },
+  { icon: Settings, label: "Settings", badge: null },
+  { icon: Plus, label: "Plus Settings", badge: null },
+]
+
+export function Sidebar({ isOpen, onClose, onProfileClick, onAddAccountClick, onSettingsClick }: SidebarProps) {
+  const { profile } = useUser()
+
+  // Lock body scroll when sidebar is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden"
+    } else {
+      document.body.style.overflow = ""
+    }
+    return () => {
+      document.body.style.overflow = ""
+    }
+  }, [isOpen])
+
+  return (
+    <>
+      {/* Backdrop Overlay */}
+      <div
+        onClick={onClose}
+        className={cn(
+          "fixed inset-0 z-40 bg-black/70 transition-opacity duration-300",
+          isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        )}
+        aria-hidden="true"
+      />
+
+      {/* Drawer - Overlaps Content */}
+      <aside
+        aria-label="Navigation menu"
+        className={cn(
+          "fixed top-0 left-0 z-50 h-screen w-80 flex flex-col bg-card text-card-foreground shadow-2xl transition-transform duration-300 ease-in-out",
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        )}
+      >
+        {/* Profile Header */}
+        <div className="relative bg-primary px-6 pt-8 pb-6">
+          {/* Close button - X icon */}
+          <button
+            onClick={onClose}
+            aria-label="Close menu"
+            className="absolute top-5 right-5 p-1 text-primary-foreground/80 hover:text-primary-foreground transition-colors"
+          >
+            <X className="h-6 w-6" />
+          </button>
+
+          {/* Avatar */}
+          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-3xl font-bold text-white mb-4 flex-shrink-0 overflow-hidden">
+            {profile.avatarUrl ? (
+              <img src={profile.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+            ) : (
+              <span>{profile.name.charAt(0)}</span>
+            )}
+          </div>
+
+          {/* User info */}
+          <p className="font-semibold text-primary-foreground text-lg leading-tight">{profile.name}</p>
+          <p className="text-primary-foreground/70 text-sm mt-1">{profile.username}</p>
+
+          {/* Online status */}
+          <div className="flex items-center gap-2 mt-3">
+            <span className="w-2 h-2 rounded-full bg-green-400" />
+            <span className="text-xs text-primary-foreground/70">Online</span>
+          </div>
+        </div>
+
+        {/* Nav Items */}
+        <nav className="flex-1 overflow-y-auto py-1">
+          <ul role="list">
+            {navItems.map(({ icon: Icon, label, badge }) => (
+              <li key={label}>
+                <button
+                  onClick={() => {
+                    if (label === "My Profile") {
+                      onClose()
+                      onProfileClick()
+                    } else if (label === "Add Account") {
+                      onClose()
+                      onAddAccountClick()
+                    } else if (label === "Settings") {
+                      onClose()
+                      onSettingsClick()
+                    }
+                  }}
+                  className="w-full flex items-center gap-4 px-6 py-4 hover:bg-secondary/50 transition-colors group active:bg-secondary/70"
+                >
+                  <Icon className="h-6 w-6 text-muted-foreground group-hover:text-foreground transition-colors flex-shrink-0" />
+                  <span className="flex-1 text-left text-[15px] text-foreground font-medium">{label}</span>
+                  {badge && (
+                    <span className="text-[10px] font-bold bg-primary text-primary-foreground px-2 py-0.5 rounded-full">
+                      {badge}
+                    </span>
+                  )}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </aside>
+    </>
+  )
+}
