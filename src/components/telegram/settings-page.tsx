@@ -67,10 +67,11 @@ function SectionCard({ children, label }: { children: React.ReactNode; label?: s
   )
 }
 
-function SettingsRow({ row, last }: { row: Row; last?: boolean }) {
+function SettingsRow({ row, last, onClick }: { row: Row; last?: boolean; onClick?: () => void }) {
   const Icon = row.icon
   return (
     <button
+      onClick={onClick}
       className={cn(
         "w-full flex items-center gap-3.5 px-3 py-2.5 hover:bg-secondary/30 active:bg-secondary/50 transition-colors text-left",
         !last && "border-b border-border/30"
@@ -85,9 +86,33 @@ function SettingsRow({ row, last }: { row: Row; last?: boolean }) {
           <p className="text-[13px] text-muted-foreground mt-0.5 truncate">{row.subtitle}</p>
         )}
       </div>
+      <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
     </button>
   )
 }
+
+function SettingsSubPage({ title, isOpen, onClose }: { title: string; isOpen: boolean; onClose: () => void }) {
+  return (
+    <div
+      style={{ zIndex: 90 }}
+      className={cn(
+        "fixed inset-0 flex flex-col bg-background transition-transform duration-300 ease-in-out",
+        isOpen ? "translate-x-0" : "translate-x-full"
+      )}
+    >
+      <div className="sticky top-0 z-10 flex items-center gap-3 px-2 py-3 bg-card/95 backdrop-blur border-b border-border/40">
+        <button onClick={onClose} aria-label="Back" className="p-2 text-foreground">
+          <ArrowLeft className="h-6 w-6" />
+        </button>
+        <h1 className="flex-1 text-[18px] font-semibold text-foreground">{title}</h1>
+      </div>
+      <div className="flex-1 overflow-y-auto p-6 text-center text-muted-foreground text-sm">
+        {title} settings will appear here.
+      </div>
+    </div>
+  )
+}
+
 
 export function SettingsPage({ isOpen, onClose }: SettingsPageProps) {
   const { profile, setAvatarUrl } = useUser()
