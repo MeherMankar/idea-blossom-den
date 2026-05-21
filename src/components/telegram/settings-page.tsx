@@ -22,6 +22,7 @@ import {
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useUser } from "@/contexts/user-context"
+import { EditProfilePage } from "./edit-profile-page"
 
 interface SettingsPageProps {
   isOpen: boolean
