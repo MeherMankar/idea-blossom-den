@@ -15,6 +15,7 @@ import { UserProvider } from "@/contexts/user-context"
 import { ProtectionManagerPage } from "@/components/telegram/protection-manager-page"
 import { SpamMasterPage } from "@/components/telegram/spam-master-page"
 import { CleanupPage } from "@/components/telegram/cleanup-page"
+import { AutomationPage } from "@/components/telegram/automation-page"
 
 import { chats } from "@/lib/mock-data"
 
@@ -55,6 +56,7 @@ function TelegramChatList() {
   const [isProtectionManagerOpen, setIsProtectionManagerOpen] = useState(false)
   const [isSpamMasterOpen, setIsSpamMasterOpen] = useState(false)
   const [isCleanupOpen, setIsCleanupOpen] = useState(false)
+  const [isAutomationOpen, setIsAutomationOpen] = useState(false)
 
   const handleNavTabChange = (tab: "chats" | "contacts" | "settings" | "profile") => {
     setActiveNavTab(tab)
@@ -80,6 +82,7 @@ function TelegramChatList() {
           onProtectionManagerClick={() => setIsProtectionManagerOpen(true)}
           onSpamMasterClick={() => setIsSpamMasterOpen(true)}
           onCleanupClick={() => setIsCleanupOpen(true)}
+          onAutomationClick={() => setIsAutomationOpen(true)}
         />
         <SettingsPage isOpen={isSettingsOpen} onClose={() => { setIsSettingsOpen(false); setActiveNavTab("chats") }} />
         <ProfilePage isOpen={isProfileOpen} onClose={() => { setIsProfileOpen(false); setActiveNavTab("chats") }} />
@@ -87,6 +90,7 @@ function TelegramChatList() {
         <ProtectionManagerPage isOpen={isProtectionManagerOpen} onClose={() => setIsProtectionManagerOpen(false)} />
         <SpamMasterPage isOpen={isSpamMasterOpen} onClose={() => setIsSpamMasterOpen(false)} />
         <CleanupPage isOpen={isCleanupOpen} onClose={() => setIsCleanupOpen(false)} />
+        <AutomationPage isOpen={isAutomationOpen} onClose={() => setIsAutomationOpen(false)} />
         <AuthFlow
           isOpen={isAuthFlowOpen}
           onClose={() => setIsAuthFlowOpen(false)}
