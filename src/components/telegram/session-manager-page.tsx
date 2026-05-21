@@ -64,7 +64,7 @@ export function SessionManagerPage({ isOpen, onClose }: SessionManagerPageProps)
         {/* Title Header */}
         <div className="px-4 py-4 border-b border-white/10">
           <p className="text-base font-semibold text-white flex items-center gap-3">
-            <KeyRound className="h-5 w-5 text-amber-500" />
+            <KeyRound className="h-5 w-5 text-[#2AABEE]" />
             Manage your sessions
           </p>
         </div>
@@ -87,7 +87,7 @@ export function SessionManagerPage({ isOpen, onClose }: SessionManagerPageProps)
                     onClick={() => handleOptionClick(label)}
                     className="w-full flex items-center gap-4 px-4 py-4 hover:bg-white/5 transition-colors group"
                   >
-                    <Icon className="h-6 w-6 text-amber-500 transition-colors flex-shrink-0" />
+                    <Icon className="h-6 w-6 text-[#2AABEE] transition-colors flex-shrink-0" />
                     <div className="flex-1 text-left">
                       <span className="text-[15px] font-semibold block text-white">
                         {label}
