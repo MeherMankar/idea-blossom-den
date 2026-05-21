@@ -9,6 +9,7 @@ import { Sidebar } from "@/components/telegram/sidebar"
 import { ProfilePage } from "@/components/telegram/profile-page"
 import { AuthFlow } from "@/components/telegram/auth/auth-flow"
 import { SettingsPage } from "@/components/telegram/settings-page"
+import { ContactsListPage } from "@/components/telegram/contacts-list-page"
 import { UserProvider } from "@/contexts/user-context"
 
 import { chats } from "@/lib/mock-data"
@@ -44,6 +45,7 @@ function TelegramChatList() {
   const [isProfileOpen, setIsProfileOpen] = useState(false)
   const [isAuthFlowOpen, setIsAuthFlowOpen] = useState(false)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const [isContactsOpen, setIsContactsOpen] = useState(false)
 
   return (
     <div className="dark">
@@ -54,9 +56,11 @@ function TelegramChatList() {
           onProfileClick={() => setIsProfileOpen(true)}
           onAddAccountClick={() => setIsAuthFlowOpen(true)}
           onSettingsClick={() => setIsSettingsOpen(true)}
+          onContactsClick={() => setIsContactsOpen(true)}
         />
         <SettingsPage isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
         <ProfilePage isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
+        <ContactsListPage isOpen={isContactsOpen} onClose={() => setIsContactsOpen(false)} />
         <AuthFlow
           isOpen={isAuthFlowOpen}
           onClose={() => setIsAuthFlowOpen(false)}
@@ -78,7 +82,7 @@ function TelegramChatList() {
           ))}
         </div>
 
-        <FabButton onClick={() => console.log("Compose new message")} />
+        <FabButton onClick={() => setIsContactsOpen(true)} />
       </div>
     </div>
   )
