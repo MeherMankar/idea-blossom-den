@@ -23,6 +23,7 @@ interface SidebarProps {
   onProfileClick: () => void
   onAddAccountClick: () => void
   onSettingsClick: () => void
+  onContactsClick: () => void
 }
 
 const navItems = [
@@ -39,7 +40,7 @@ const navItems = [
   { icon: Plus, label: "Plus Settings", badge: null },
 ]
 
-export function Sidebar({ isOpen, onClose, onProfileClick, onAddAccountClick, onSettingsClick }: SidebarProps) {
+export function Sidebar({ isOpen, onClose, onProfileClick, onAddAccountClick, onSettingsClick, onContactsClick }: SidebarProps) {
   const { profile } = useUser()
 
   // Lock body scroll when sidebar is open
@@ -121,6 +122,9 @@ export function Sidebar({ isOpen, onClose, onProfileClick, onAddAccountClick, on
                     } else if (label === "Settings") {
                       onClose()
                       onSettingsClick()
+                    } else if (label === "Contacts") {
+                      onClose()
+                      onContactsClick()
                     }
                   }}
                   className="w-full flex items-center gap-4 px-6 py-4 hover:bg-secondary/50 transition-colors group active:bg-secondary/70"

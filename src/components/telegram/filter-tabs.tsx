@@ -1,9 +1,9 @@
-
 import { cn } from "@/lib/utils"
+import { LayoutGrid, UserPlus, Users, UsersRound } from "lucide-react"
 
 interface FilterTab {
   id: string
-  label: string
+  icon: "all" | "bots" | "people" | "groups"
   count: number
 }
 
@@ -13,33 +13,42 @@ interface FilterTabsProps {
   onTabChange: (tabId: string) => void
 }
 
+const iconMap = {
+  all: LayoutGrid,
+  bots: UserPlus,
+  people: Users,
+  groups: UsersRound,
+}
+
 export function FilterTabs({ tabs, activeTab, onTabChange }: FilterTabsProps) {
   return (
-    <div className="flex items-center gap-2 px-4 py-3 overflow-x-auto scrollbar-hide">
-      {tabs.map((tab) => (
-        <button
-          key={tab.id}
-          onClick={() => onTabChange(tab.id)}
-          className={cn(
-            "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-colors whitespace-nowrap",
-            activeTab === tab.id
-              ? "bg-primary text-primary-foreground"
-              : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-          )}
-        >
-          <span>{tab.label}</span>
-          <span
-            className={cn(
-              "min-w-[20px] h-5 rounded-full text-xs flex items-center justify-center px-1.5",
-              activeTab === tab.id
-                ? "bg-primary-foreground/20 text-primary-foreground"
-                : "bg-muted text-muted-foreground"
-            )}
-          >
-            {tab.count}
-          </span>
-        </button>
-      ))}
+    <div className="flex items-center px-4 py-2 bg-[#17212b]">
+      <div className="flex items-center bg-[#242f3d] rounded-full p-1 w-full">
+        {tabs.map((tab) => {
+          const Icon = iconMap[tab.icon]
+          const isActive = activeTab === tab.id
+          return (
+            <button
+              key={tab.id}
+              onClick={() => onTabChange(tab.id)}
+              className={cn(
+                "flex items-center justify-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-colors flex-1",
+                isActive
+                  ? "bg-[#3e546a] text-white"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              <Icon className="h-4 w-4" />
+              <span className={cn(
+                "text-xs font-medium",
+                isActive ? "text-white" : "text-muted-foreground"
+              )}>
+                {tab.count}
+              </span>
+            </button>
+          )
+        })}
+      </div>
     </div>
   )
 }

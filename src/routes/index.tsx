@@ -9,6 +9,8 @@ import { Sidebar } from "@/components/telegram/sidebar"
 import { ProfilePage } from "@/components/telegram/profile-page"
 import { AuthFlow } from "@/components/telegram/auth/auth-flow"
 import { SettingsPage } from "@/components/telegram/settings-page"
+import { ContactsListPage } from "@/components/telegram/contacts-list-page"
+import { BottomNav } from "@/components/telegram/bottom-nav"
 import { UserProvider } from "@/contexts/user-context"
 
 import { chats } from "@/lib/mock-data"
@@ -24,9 +26,10 @@ export const Route = createFileRoute("/")({
 })
 
 const tabs = [
-  { id: "all", label: "All", count: 122 },
-  { id: "people", label: "People", count: 2 },
-  { id: "bots", label: "Bots", count: 14 },
+  { id: "all", icon: "all" as const, count: 297 },
+  { id: "bots", icon: "bots" as const, count: 5 },
+  { id: "people", icon: "people" as const, count: 3 },
+  { id: "groups", icon: "groups" as const, count: 91 },
 ]
 
 function IndexPage() {
@@ -39,24 +42,39 @@ function IndexPage() {
 
 function TelegramChatList() {
   const [searchValue, setSearchValue] = useState("")
-  const [activeTab, setActiveTab] = useState("all")
+  const [activeTab, setActiveTab] = useState("people")
+  const [activeNavTab, setActiveNavTab] = useState<"chats" | "contacts" | "settings" | "profile">("chats")
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [isProfileOpen, setIsProfileOpen] = useState(false)
   const [isAuthFlowOpen, setIsAuthFlowOpen] = useState(false)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const [isContactsOpen, setIsContactsOpen] = useState(false)
+
+  const handleNavTabChange = (tab: "chats" | "contacts" | "settings" | "profile") => {
+    setActiveNavTab(tab)
+    if (tab === "contacts") {
+      setIsContactsOpen(true)
+    } else if (tab === "settings") {
+      setIsSettingsOpen(true)
+    } else if (tab === "profile") {
+      setIsProfileOpen(true)
+    }
+  }
 
   return (
     <div className="dark">
-      <div className="min-h-screen bg-background text-foreground max-w-md mx-auto relative">
+      <div className="min-h-screen bg-[#17212b] text-foreground max-w-md mx-auto relative pb-16">
         <Sidebar
           isOpen={isSidebarOpen}
           onClose={() => setIsSidebarOpen(false)}
           onProfileClick={() => setIsProfileOpen(true)}
           onAddAccountClick={() => setIsAuthFlowOpen(true)}
           onSettingsClick={() => setIsSettingsOpen(true)}
+          onContactsClick={() => setIsContactsOpen(true)}
         />
-        <SettingsPage isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
-        <ProfilePage isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
+        <SettingsPage isOpen={isSettingsOpen} onClose={() => { setIsSettingsOpen(false); setActiveNavTab("chats") }} />
+        <ProfilePage isOpen={isProfileOpen} onClose={() => { setIsProfileOpen(false); setActiveNavTab("chats") }} />
+        <ContactsListPage isOpen={isContactsOpen} onClose={() => { setIsContactsOpen(false); setActiveNavTab("chats") }} />
         <AuthFlow
           isOpen={isAuthFlowOpen}
           onClose={() => setIsAuthFlowOpen(false)}
@@ -67,18 +85,24 @@ function TelegramChatList() {
           searchValue={searchValue}
           onSearchChange={setSearchValue}
           onMenuClick={() => setIsSidebarOpen(true)}
+          title="People"
         />
 
         <FilterTabs tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
 
-        <div className="divide-y divide-border/30">
-          <ArchivedChats preview="Rss, MP3 320kbps, Lossless Music Co..." />
+        <div className="divide-y divide-[#242f3d]">
           {chats.map((chat) => (
             <ChatItem key={chat.id} {...chat} />
           ))}
         </div>
 
-        <FabButton onClick={() => console.log("Compose new message")} />
+        <FabButton onClick={() => setIsContactsOpen(true)} />
+        
+        <BottomNav 
+          activeTab={activeNavTab} 
+          onTabChange={handleNavTabChange}
+          unreadCount={297}
+        />
       </div>
     </div>
   )
