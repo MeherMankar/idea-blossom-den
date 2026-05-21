@@ -1,7 +1,8 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { VolumeX, Pin, Check, CheckCheck } from "lucide-react"
+import { VolumeX, Pin, CheckCheck } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { Link } from "@tanstack/react-router"
 
 interface ChatItemProps {
   avatar: string
