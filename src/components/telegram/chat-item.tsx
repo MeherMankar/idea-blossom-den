@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 import { Link } from "@tanstack/react-router"
 
 interface ChatItemProps {
+  id: string
   avatar: string
   name: string
   preview: string
