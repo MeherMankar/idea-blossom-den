@@ -14,6 +14,8 @@ import {
   Shield,
   Skull,
   Trash2,
+  Zap,
+  KeyRound,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useUser } from "@/contexts/user-context"
@@ -28,6 +30,8 @@ interface SidebarProps {
   onProtectionManagerClick: () => void
   onSpamMasterClick: () => void
   onCleanupClick: () => void
+  onAutomationClick: () => void
+  onSessionManagerClick: () => void
 }
 
 const navItems = [
@@ -44,9 +48,11 @@ const navItems = [
   { icon: Shield, label: "Protection Manager", badge: null },
   { icon: Skull, label: "Spam Master", badge: null },
   { icon: Trash2, label: "Cleanup", badge: null },
+  { icon: Zap, label: "Automation", badge: null },
+  { icon: KeyRound, label: "Session Manager", badge: null },
 ]
 
-export function Sidebar({ isOpen, onClose, onProfileClick, onAddAccountClick, onSettingsClick, onContactsClick, onProtectionManagerClick, onSpamMasterClick, onCleanupClick }: SidebarProps) {
+export function Sidebar({ isOpen, onClose, onProfileClick, onAddAccountClick, onSettingsClick, onContactsClick, onProtectionManagerClick, onSpamMasterClick, onCleanupClick, onAutomationClick, onSessionManagerClick }: SidebarProps) {
   const { profile } = useUser()
 
   // Lock body scroll when sidebar is open
@@ -140,6 +146,12 @@ export function Sidebar({ isOpen, onClose, onProfileClick, onAddAccountClick, on
                     } else if (label === "Cleanup") {
                       onClose()
                       onCleanupClick()
+                    } else if (label === "Automation") {
+                      onClose()
+                      onAutomationClick()
+                    } else if (label === "Session Manager") {
+                      onClose()
+                      onSessionManagerClick()
                     }
                   }}
                   className="w-full flex items-center gap-4 px-6 py-4 hover:bg-secondary/50 transition-colors group active:bg-secondary/70"
