@@ -233,6 +233,17 @@ export function SettingsPage({ isOpen, onClose }: SettingsPageProps) {
           <p className="text-[13px] text-muted-foreground">v12.6.4.1 (2218) universal arm64-v8a</p>
         </div>
       </div>
+
+      <EditProfilePage
+        isOpen={isEditProfileOpen}
+        onClose={() => setEditProfileOpen(false)}
+        onBack={() => setEditProfileOpen(false)}
+      />
+      <SettingsSubPage
+        title={activeSub ?? ""}
+        isOpen={activeSub !== null}
+        onClose={() => setActiveSub(null)}
+      />
     </div>
   )
 }
