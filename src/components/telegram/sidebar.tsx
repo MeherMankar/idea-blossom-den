@@ -156,7 +156,7 @@ export function Sidebar({ isOpen, onClose, onProfileClick, onAddAccountClick, on
                   }}
                   className="w-full flex items-center gap-4 px-6 py-4 hover:bg-secondary/50 transition-colors group active:bg-secondary/70"
                 >
-                  <Icon className="h-6 w-6 text-muted-foreground group-hover:text-foreground transition-colors flex-shrink-0" />
+                  <Icon className="h-6 w-6 text-[#2AABEE] transition-colors flex-shrink-0" />
                   <span className="flex-1 text-left text-[15px] text-foreground font-medium">{label}</span>
                   {badge && (
                     <span className="text-[10px] font-bold bg-primary text-primary-foreground px-2 py-0.5 rounded-full">

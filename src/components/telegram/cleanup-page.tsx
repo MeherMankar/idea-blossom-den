@@ -74,7 +74,7 @@ export function CleanupPage({ isOpen, onClose }: CleanupPageProps) {
         {/* Question Header */}
         <div className="px-4 py-4 border-b border-white/10">
           <p className="text-base font-semibold text-white flex items-center gap-3">
-            <Trash2 className="h-5 w-5 text-red-500" />
+            <Trash2 className="h-5 w-5 text-[#2AABEE]" />
             What would you like to clean?
           </p>
         </div>
@@ -88,15 +88,9 @@ export function CleanupPage({ isOpen, onClose }: CleanupPageProps) {
                   onClick={() => handleCleanupAction(label)}
                   className="w-full flex items-center gap-4 px-4 py-4 hover:bg-white/5 transition-colors group"
                 >
-                  <Icon className={cn(
-                    "h-6 w-6 transition-colors flex-shrink-0",
-                    label === "all" ? "text-red-500" : "text-gray-400 group-hover:text-white"
-                  )} />
+                  <Icon className="h-6 w-6 text-[#2AABEE] transition-colors flex-shrink-0" />
                   <div className="flex-1 text-left">
-                    <span className={cn(
-                      "text-[15px] font-semibold block",
-                      label === "all" ? "text-red-500" : "text-white"
-                    )}>{label}</span>
+                    <span className="text-[15px] font-semibold block text-white">{label}</span>
                     <span className="text-[13px] text-gray-400">{description}</span>
                   </div>
                 </button>
@@ -107,9 +101,9 @@ export function CleanupPage({ isOpen, onClose }: CleanupPageProps) {
 
         {/* Warning Footer */}
         <div className="px-4 py-4 border-t border-white/10">
-          <div className="flex items-center gap-3 px-4 py-3 bg-red-500/10 border border-red-500/30 rounded-lg">
-            <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0" />
-            <p className="text-sm text-red-400 font-medium">
+          <div className="flex items-center gap-3 px-4 py-3 bg-[#2AABEE]/10 border border-[#2AABEE]/30 rounded-lg">
+            <AlertCircle className="h-5 w-5 text-[#2AABEE] flex-shrink-0" />
+            <p className="text-sm text-[#2AABEE] font-medium">
               These actions cannot be undone!
             </p>
           </div>
