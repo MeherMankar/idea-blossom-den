@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import {
   ArrowLeft,
   Trash2,
@@ -11,93 +11,31 @@ import {
   Users,
   Radio,
   Flame,
-  Loader2,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface CleanupPageProps {
   isOpen: boolean
-  cleanupType: string | null
   onClose: () => void
 }
 
-const cleanupDetails: Record<string, {
-  icon: typeof Trash2
-  title: string
-  description: string
-  warning: string
-}> = {
-  personal: {
-    icon: MessageSquare,
-    title: "Clean Personal Messages",
-    description: "This will delete all direct messages with other users. Your chat history will be permanently removed.",
-    warning: "All your personal conversations will be deleted!",
-  },
-  bots: {
-    icon: Bot,
-    title: "Clean Bot Conversations",
-    description: "This will delete all conversations with bots. Any saved data in bot chats will be lost.",
-    warning: "All bot conversations will be deleted!",
-  },
-  telegram: {
-    icon: Send,
-    title: "Clean Telegram Service Chats",
-    description: "This will delete all Telegram service chats including notifications and updates from Telegram.",
-    warning: "All Telegram service chats will be deleted!",
-  },
-  spambot: {
-    icon: AlertCircle,
-    title: "Clean @spambot Conversations",
-    description: "This will delete your conversations with @spambot including any spam reports you have made.",
-    warning: "Your spambot chat history will be deleted!",
-  },
-  my_messages: {
-    icon: Mail,
-    title: "Delete Your Messages from Groups",
-    description: "This will delete all messages you have sent in groups. Other members will no longer see your messages.",
-    warning: "All your messages in groups will be deleted!",
-  },
-  channels: {
-    icon: LogOut,
-    title: "Leave All Channels",
-    description: "This will leave all channels you are subscribed to. You will stop receiving updates from these channels.",
-    warning: "You will leave all channels!",
-  },
-  groups: {
-    icon: Users,
-    title: "Leave All Groups",
-    description: "This will leave all groups you are a member of. You will lose access to group chats and files.",
-    warning: "You will leave all groups!",
-  },
-  owned_groups: {
-    icon: Trash2,
-    title: "Delete Owned Groups",
-    description: "This will permanently delete all groups you own. All members will lose access and all data will be lost.",
-    warning: "All groups you own will be permanently deleted!",
-  },
-  owned_channels: {
-    icon: Radio,
-    title: "Delete Owned Channels",
-    description: "This will permanently delete all channels you own. All subscribers will lose access and all content will be lost.",
-    warning: "All channels you own will be permanently deleted!",
-  },
-  all: {
-    icon: Flame,
-    title: "Clean Everything",
-    description: "This will perform all cleanup actions above. Your entire Telegram data will be wiped clean.",
-    warning: "ALL your Telegram data will be permanently deleted!",
-  },
-}
+const cleanupItems = [
+  { icon: MessageSquare, label: "personal", description: "Direct messages with users" },
+  { icon: Bot, label: "bots", description: "Conversations with bots" },
+  { icon: Send, label: "telegram", description: "Telegram service chats" },
+  { icon: AlertCircle, label: "spambot", description: "@spambot conversations" },
+  { icon: Mail, label: "my_messages", description: "Delete your sent messages from groups" },
+  { icon: LogOut, label: "channels", description: "Leave all channels" },
+  { icon: Users, label: "groups", description: "Leave all groups" },
+  { icon: Trash2, label: "owned_groups", description: "Delete groups you own" },
+  { icon: Radio, label: "owned_channels", description: "Delete channels you own" },
+  { icon: Flame, label: "all", description: "Everything above" },
+]
 
-export function CleanupPage({ isOpen, cleanupType, onClose }: CleanupPageProps) {
-  const [isProcessing, setIsProcessing] = useState(false)
-  const [confirmText, setConfirmText] = useState("")
-
+export function CleanupPage({ isOpen, onClose }: CleanupPageProps) {
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden"
-      setConfirmText("")
-      setIsProcessing(false)
     } else {
       document.body.style.overflow = ""
     }
@@ -106,20 +44,9 @@ export function CleanupPage({ isOpen, cleanupType, onClose }: CleanupPageProps) 
     }
   }, [isOpen])
 
-  if (!cleanupType || !cleanupDetails[cleanupType]) return null
-
-  const details = cleanupDetails[cleanupType]
-  const Icon = details.icon
-  const isConfirmValid = confirmText.toLowerCase() === "delete"
-
-  const handleCleanup = () => {
-    if (!isConfirmValid) return
-    setIsProcessing(true)
-    // Simulate cleanup process
-    setTimeout(() => {
-      setIsProcessing(false)
-      onClose()
-    }, 2000)
+  const handleCleanupAction = (type: string) => {
+    // Handle cleanup action - this would trigger the actual cleanup
+    console.log(`Cleanup action triggered: ${type}`)
   }
 
   return (
@@ -142,83 +69,49 @@ export function CleanupPage({ isOpen, cleanupType, onClose }: CleanupPageProps) 
       </header>
 
       {/* Content */}
-      <div className="p-6 space-y-6">
-        {/* Icon and Title */}
-        <div className="flex flex-col items-center text-center">
-          <div className={cn(
-            "w-20 h-20 rounded-full flex items-center justify-center mb-4",
-            cleanupType === "all" ? "bg-destructive/20" : "bg-destructive/10"
-          )}>
-            <Icon className={cn(
-              "h-10 w-10",
-              cleanupType === "all" ? "text-destructive" : "text-destructive/80"
-            )} />
-          </div>
-          <h2 className="text-xl font-bold text-foreground">{details.title}</h2>
-        </div>
-
-        {/* Description */}
-        <div className="bg-card rounded-xl p-4 border border-border">
-          <p className="text-muted-foreground text-sm leading-relaxed">
-            {details.description}
+      <div className="flex flex-col h-[calc(100%-64px)]">
+        {/* Question Header */}
+        <div className="px-4 py-4 border-b border-border/50">
+          <p className="text-base font-semibold text-foreground flex items-center gap-3">
+            <Trash2 className="h-5 w-5 text-destructive" />
+            What would you like to clean?
           </p>
         </div>
 
-        {/* Warning */}
-        <div className="bg-destructive/10 rounded-xl p-4 flex items-start gap-3">
-          <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0 mt-0.5" />
-          <div>
-            <p className="text-destructive font-semibold text-sm">Warning</p>
-            <p className="text-destructive/80 text-sm mt-1">{details.warning}</p>
+        {/* Cleanup Items List */}
+        <div className="flex-1 overflow-y-auto">
+          <ul role="list">
+            {cleanupItems.map(({ icon: Icon, label, description }) => (
+              <li key={label} className="border-b border-border/30">
+                <button
+                  onClick={() => handleCleanupAction(label)}
+                  className="w-full flex items-center gap-4 px-4 py-4 hover:bg-secondary/50 transition-colors group active:bg-secondary/70"
+                >
+                  <Icon className={cn(
+                    "h-6 w-6 transition-colors flex-shrink-0",
+                    label === "all" ? "text-destructive" : "text-muted-foreground group-hover:text-foreground"
+                  )} />
+                  <div className="flex-1 text-left">
+                    <span className={cn(
+                      "text-[15px] font-semibold block",
+                      label === "all" ? "text-destructive" : "text-foreground"
+                    )}>{label}</span>
+                    <span className="text-[13px] text-muted-foreground">{description}</span>
+                  </div>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Warning Footer */}
+        <div className="px-4 py-4 border-t border-border/50 bg-card">
+          <div className="flex items-center gap-3 px-4 py-3 bg-destructive/10 rounded-lg">
+            <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0" />
+            <p className="text-sm text-destructive font-medium">
+              These actions cannot be undone!
+            </p>
           </div>
-        </div>
-
-        {/* Confirmation Input */}
-        <div className="space-y-3">
-          <label className="text-sm font-medium text-foreground block">
-            Type <span className="text-destructive font-bold">DELETE</span> to confirm
-          </label>
-          <input
-            type="text"
-            value={confirmText}
-            onChange={(e) => setConfirmText(e.target.value)}
-            placeholder="Type DELETE here"
-            className="w-full px-4 py-3 bg-card border border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-destructive/50 focus:border-destructive transition-colors"
-            disabled={isProcessing}
-          />
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex gap-3 pt-4">
-          <button
-            onClick={onClose}
-            disabled={isProcessing}
-            className="flex-1 px-4 py-3 bg-secondary text-secondary-foreground rounded-xl font-medium hover:bg-secondary/80 transition-colors disabled:opacity-50"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleCleanup}
-            disabled={!isConfirmValid || isProcessing}
-            className={cn(
-              "flex-1 px-4 py-3 rounded-xl font-medium transition-colors flex items-center justify-center gap-2",
-              isConfirmValid && !isProcessing
-                ? "bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                : "bg-destructive/30 text-destructive-foreground/50 cursor-not-allowed"
-            )}
-          >
-            {isProcessing ? (
-              <>
-                <Loader2 className="h-5 w-5 animate-spin" />
-                Processing...
-              </>
-            ) : (
-              <>
-                <Trash2 className="h-5 w-5" />
-                Clean Now
-              </>
-            )}
-          </button>
         </div>
       </div>
     </div>

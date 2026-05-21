@@ -54,7 +54,7 @@ function TelegramChatList() {
   const [isContactsOpen, setIsContactsOpen] = useState(false)
   const [isProtectionManagerOpen, setIsProtectionManagerOpen] = useState(false)
   const [isSpamMasterOpen, setIsSpamMasterOpen] = useState(false)
-  const [cleanupType, setCleanupType] = useState<string | null>(null)
+  const [isCleanupOpen, setIsCleanupOpen] = useState(false)
 
   const handleNavTabChange = (tab: "chats" | "contacts" | "settings" | "profile") => {
     setActiveNavTab(tab)
@@ -79,14 +79,14 @@ function TelegramChatList() {
           onContactsClick={() => setIsContactsOpen(true)}
           onProtectionManagerClick={() => setIsProtectionManagerOpen(true)}
           onSpamMasterClick={() => setIsSpamMasterOpen(true)}
-          onCleanupClick={(type) => setCleanupType(type)}
+          onCleanupClick={() => setIsCleanupOpen(true)}
         />
         <SettingsPage isOpen={isSettingsOpen} onClose={() => { setIsSettingsOpen(false); setActiveNavTab("chats") }} />
         <ProfilePage isOpen={isProfileOpen} onClose={() => { setIsProfileOpen(false); setActiveNavTab("chats") }} />
         <ContactsListPage isOpen={isContactsOpen} onClose={() => { setIsContactsOpen(false); setActiveNavTab("chats") }} />
         <ProtectionManagerPage isOpen={isProtectionManagerOpen} onClose={() => setIsProtectionManagerOpen(false)} />
         <SpamMasterPage isOpen={isSpamMasterOpen} onClose={() => setIsSpamMasterOpen(false)} />
-        <CleanupPage isOpen={!!cleanupType} cleanupType={cleanupType} onClose={() => setCleanupType(null)} />
+        <CleanupPage isOpen={isCleanupOpen} onClose={() => setIsCleanupOpen(false)} />
         <AuthFlow
           isOpen={isAuthFlowOpen}
           onClose={() => setIsAuthFlowOpen(false)}
