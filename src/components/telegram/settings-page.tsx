@@ -25,6 +25,7 @@ import { useUser } from "@/contexts/user-context";
 import { EditProfilePage } from "./edit-profile-page";
 import { DevicesPage } from "./devices-page";
 import { PrivacySecurityPage } from "./privacy-security-page";
+import { AccountSettingsPage } from "./account-settings-page";
 
 interface SettingsPageProps {
   isOpen: boolean;
@@ -148,10 +149,11 @@ export function SettingsPage({ isOpen, onClose }: SettingsPageProps) {
   const [isEditProfileOpen, setEditProfileOpen] = useState(false);
   const [isDevicesOpen, setIsDevicesOpen] = useState(false);
   const [isPrivacySecurityOpen, setIsPrivacySecurityOpen] = useState(false);
+  const [isAccountSettingsOpen, setIsAccountSettingsOpen] = useState(false);
 
   function openRow(label: string) {
     if (label === "Account") {
-      setEditProfileOpen(true);
+      setIsAccountSettingsOpen(true);
     } else if (label === "Devices") {
       setIsDevicesOpen(true);
     } else if (label === "Privacy & Security") {
@@ -288,6 +290,10 @@ export function SettingsPage({ isOpen, onClose }: SettingsPageProps) {
         isOpen={isEditProfileOpen}
         onClose={() => setEditProfileOpen(false)}
         onBack={() => setEditProfileOpen(false)}
+      />
+      <AccountSettingsPage
+        isOpen={isAccountSettingsOpen}
+        onClose={() => setIsAccountSettingsOpen(false)}
       />
       <DevicesPage isOpen={isDevicesOpen} onClose={() => setIsDevicesOpen(false)} />
       <PrivacySecurityPage
