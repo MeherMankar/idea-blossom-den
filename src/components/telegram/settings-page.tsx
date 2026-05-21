@@ -118,12 +118,23 @@ export function SettingsPage({ isOpen, onClose }: SettingsPageProps) {
   const { profile, setAvatarUrl } = useUser()
   const avatarInputRef = useRef<HTMLInputElement>(null)
   const [scrolled, setScrolled] = useState(false)
+  const [activeSub, setActiveSub] = useState<string | null>(null)
+  const [isEditProfileOpen, setEditProfileOpen] = useState(false)
+
+  function openRow(label: string) {
+    if (label === "Account") {
+      setEditProfileOpen(true)
+    } else {
+      setActiveSub(label)
+    }
+  }
 
   function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
     setAvatarUrl(URL.createObjectURL(file))
   }
+
 
   return (
     <div
