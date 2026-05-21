@@ -12,6 +12,8 @@ import { SettingsPage } from "@/components/telegram/settings-page"
 import { ContactsListPage } from "@/components/telegram/contacts-list-page"
 import { BottomNav } from "@/components/telegram/bottom-nav"
 import { UserProvider } from "@/contexts/user-context"
+import { ProtectionManagerPage } from "@/components/telegram/protection-manager-page"
+import { SpamMasterPage } from "@/components/telegram/spam-master-page"
 
 import { chats } from "@/lib/mock-data"
 
@@ -49,6 +51,8 @@ function TelegramChatList() {
   const [isAuthFlowOpen, setIsAuthFlowOpen] = useState(false)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [isContactsOpen, setIsContactsOpen] = useState(false)
+  const [isProtectionManagerOpen, setIsProtectionManagerOpen] = useState(false)
+  const [isSpamMasterOpen, setIsSpamMasterOpen] = useState(false)
 
   const handleNavTabChange = (tab: "chats" | "contacts" | "settings" | "profile") => {
     setActiveNavTab(tab)
@@ -71,10 +75,14 @@ function TelegramChatList() {
           onAddAccountClick={() => setIsAuthFlowOpen(true)}
           onSettingsClick={() => setIsSettingsOpen(true)}
           onContactsClick={() => setIsContactsOpen(true)}
+          onProtectionManagerClick={() => setIsProtectionManagerOpen(true)}
+          onSpamMasterClick={() => setIsSpamMasterOpen(true)}
         />
         <SettingsPage isOpen={isSettingsOpen} onClose={() => { setIsSettingsOpen(false); setActiveNavTab("chats") }} />
         <ProfilePage isOpen={isProfileOpen} onClose={() => { setIsProfileOpen(false); setActiveNavTab("chats") }} />
         <ContactsListPage isOpen={isContactsOpen} onClose={() => { setIsContactsOpen(false); setActiveNavTab("chats") }} />
+        <ProtectionManagerPage isOpen={isProtectionManagerOpen} onClose={() => setIsProtectionManagerOpen(false)} />
+        <SpamMasterPage isOpen={isSpamMasterOpen} onClose={() => setIsSpamMasterOpen(false)} />
         <AuthFlow
           isOpen={isAuthFlowOpen}
           onClose={() => setIsAuthFlowOpen(false)}

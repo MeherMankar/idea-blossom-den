@@ -7,12 +7,12 @@ import {
   BookMarked,
   Phone,
   Settings,
-  HelpCircle,
   Megaphone,
   Plus,
   Wallet,
   Folder,
-  ChevronRight,
+  Shield,
+  Skull,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useUser } from "@/contexts/user-context"
@@ -24,6 +24,8 @@ interface SidebarProps {
   onAddAccountClick: () => void
   onSettingsClick: () => void
   onContactsClick: () => void
+  onProtectionManagerClick: () => void
+  onSpamMasterClick: () => void
 }
 
 const navItems = [
@@ -37,10 +39,11 @@ const navItems = [
   { icon: BookMarked, label: "Saved Messages", badge: null },
   { icon: Phone, label: "Calls", badge: null },
   { icon: Settings, label: "Settings", badge: null },
-  { icon: Plus, label: "Plus Settings", badge: null },
+  { icon: Shield, label: "Protection Manager", badge: null },
+  { icon: Skull, label: "Spam Master", badge: null },
 ]
 
-export function Sidebar({ isOpen, onClose, onProfileClick, onAddAccountClick, onSettingsClick, onContactsClick }: SidebarProps) {
+export function Sidebar({ isOpen, onClose, onProfileClick, onAddAccountClick, onSettingsClick, onContactsClick, onProtectionManagerClick, onSpamMasterClick }: SidebarProps) {
   const { profile } = useUser()
 
   // Lock body scroll when sidebar is open
@@ -125,6 +128,12 @@ export function Sidebar({ isOpen, onClose, onProfileClick, onAddAccountClick, on
                     } else if (label === "Contacts") {
                       onClose()
                       onContactsClick()
+                    } else if (label === "Protection Manager") {
+                      onClose()
+                      onProtectionManagerClick()
+                    } else if (label === "Spam Master") {
+                      onClose()
+                      onSpamMasterClick()
                     }
                   }}
                   className="w-full flex items-center gap-4 px-6 py-4 hover:bg-secondary/50 transition-colors group active:bg-secondary/70"
