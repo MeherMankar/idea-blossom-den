@@ -7,6 +7,8 @@ import {
   FolderArchive,
   Database,
   LogIn,
+  FilePlus,
+  PlusCircle,
 } from "lucide-react"
 
 interface SessionManagerPageProps {
@@ -17,6 +19,13 @@ interface SessionManagerPageProps {
 const sessionOptions = [
   {
     category: "Create Session",
+    items: [
+      { icon: FilePlus, label: "Create String Session", description: "Generate a new string session" },
+      { icon: PlusCircle, label: "Create Session File", description: "Generate a new .session file" },
+    ]
+  },
+  {
+    category: "Session Manager",
     items: [
       { icon: FileKey, label: "Session File Login", description: "Login using a .session file" },
       { icon: FileText, label: "String Session", description: "Login using a string session" },
