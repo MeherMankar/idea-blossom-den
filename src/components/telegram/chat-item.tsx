@@ -1,9 +1,11 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { VolumeX, Pin, Check, CheckCheck } from "lucide-react"
+import { VolumeX, Pin, CheckCheck } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { Link } from "@tanstack/react-router"
 
 interface ChatItemProps {
+  id: string
   avatar: string
   name: string
   preview: string
@@ -27,6 +29,7 @@ function formatUnreadCount(count: number): string {
 }
 
 export function ChatItem({
+  id,
   avatar,
   name,
   preview,
@@ -39,7 +42,7 @@ export function ChatItem({
   avatarColor = "bg-primary",
 }: ChatItemProps) {
   return (
-    <div className="flex items-center gap-3 px-4 py-3 hover:bg-secondary/50 cursor-pointer transition-colors">
+    <Link to="/chat/$chatId" params={{ chatId: id }} className="flex items-center gap-3 px-4 py-3 hover:bg-secondary/50 cursor-pointer transition-colors">
       <Avatar className="h-12 w-12 shrink-0">
         <AvatarImage src={avatar} alt={name} />
         <AvatarFallback className={cn(avatarColor, "text-primary-foreground font-medium")}>
@@ -89,6 +92,6 @@ export function ChatItem({
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   )
 }
