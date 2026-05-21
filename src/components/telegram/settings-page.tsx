@@ -1,24 +1,31 @@
-
-import { useState, useRef, useEffect } from "react"
+import { useRef, useState } from "react"
 import {
   ArrowLeft,
   Search,
   MoreVertical,
-  
-  Send,
-  Heart,
+  Camera,
+  ChevronRight,
+  Settings as SettingsIcon,
+  Palette,
+  Download,
+  Users,
+  User as UserIcon,
   MessageCircle,
-  Lock,
+  KeyRound,
   Bell,
   PieChart,
-  BatteryLow,
   Folder,
   Monitor,
+  BatteryLow,
   Globe,
   Star,
+  Wallet,
+  Store,
   Gift,
-  Building2,
-  Camera,
+  MessageSquare,
+  HelpCircle,
+  Lightbulb,
+  ShieldCheck,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useUser } from "@/contexts/user-context"
@@ -28,257 +35,193 @@ interface SettingsPageProps {
   onClose: () => void
 }
 
-const settingsItems = [
-  { icon: Send, label: "exteraGram Preferences", value: null },
-  { icon: Heart, label: "AyuGram Preferences", value: null },
-  { icon: MessageCircle, label: "Chat Settings", value: null },
-  { icon: Lock, label: "Privacy and Security", value: null },
-  { icon: Bell, label: "Notifications and Sounds", value: null },
-  { icon: PieChart, label: "Data and Storage", value: null },
-  { icon: BatteryLow, label: "Power Saving", value: null },
-  { icon: Folder, label: "Chat Folders", value: null },
-  { icon: Monitor, label: "Devices", value: "4", valueColor: "text-sky-400" },
-  { icon: Globe, label: "Language", value: "English", valueColor: "text-sky-400" },
+type Row = {
+  icon: typeof SettingsIcon
+  label: string
+  subtitle?: string
+  iconBg: string
+  iconColor?: string
+}
+
+const plusItems: Row[] = [
+  { icon: SettingsIcon, label: "Plus Settings", iconBg: "bg-sky-500" },
+  { icon: Palette, label: "Plus Theming", iconBg: "bg-orange-500" },
+  { icon: Palette, label: "Download themes", iconBg: "bg-rose-500" },
+  { icon: Users, label: "Support group", iconBg: "bg-sky-500" },
 ]
 
-const premiumItems = [
-  { label: "Telegram Premium", isPremium: true },
-  { label: "My Stars", isStars: true },
-  { label: "Telegram Business", isBusiness: true },
-  { label: "Send a Gift", isGift: true },
+const mainItems: Row[] = [
+  { icon: UserIcon, label: "Account", subtitle: "Number, Username, Bio", iconBg: "bg-sky-500" },
+  { icon: MessageCircle, label: "Chat Settings", subtitle: "Wallpaper, Night Mode, Animations", iconBg: "bg-orange-500" },
+  { icon: KeyRound, label: "Privacy & Security", subtitle: "Last Seen, Devices, Passkeys", iconBg: "bg-emerald-500" },
+  { icon: Bell, label: "Notifications", subtitle: "Sounds, Calls, Badges", iconBg: "bg-rose-500" },
+  { icon: PieChart, label: "Data and Storage", subtitle: "Media download settings", iconBg: "bg-sky-500" },
+  { icon: Folder, label: "Chat Folders", subtitle: "Sort chats into folders", iconBg: "bg-sky-500" },
+  { icon: Monitor, label: "Devices", subtitle: "Manage connected devices", iconBg: "bg-cyan-500" },
+  { icon: BatteryLow, label: "Power Saving", subtitle: "Reduce power usage on low charge", iconBg: "bg-orange-500" },
+  { icon: Globe, label: "Language", subtitle: "English", iconBg: "bg-violet-500" },
 ]
+
+const premiumItems: Row[] = [
+  { icon: Star, label: "Telegram Premium", iconBg: "bg-violet-500" },
+  { icon: Wallet, label: "Wallet", iconBg: "bg-sky-500" },
+  { icon: Store, label: "Telegram Business", iconBg: "bg-rose-500" },
+  { icon: Gift, label: "Send a Gift", iconBg: "bg-orange-500" },
+]
+
+const helpItems: Row[] = [
+  { icon: MessageSquare, label: "Ask a Question", iconBg: "bg-orange-500" },
+  { icon: HelpCircle, label: "Telegram FAQ", iconBg: "bg-sky-500" },
+  { icon: Lightbulb, label: "Telegram Features", iconBg: "bg-violet-500" },
+  { icon: ShieldCheck, label: "Privacy Policy", iconBg: "bg-emerald-500" },
+]
+
+function SectionCard({ children, label }: { children: React.ReactNode; label?: string }) {
+  return (
+    <div className="mx-3 mt-3 rounded-2xl bg-card overflow-hidden">
+      {label && (
+        <p className="px-4 pt-3 pb-1 text-sky-400 text-[13px] font-semibold">{label}</p>
+      )}
+      {children}
+    </div>
+  )
+}
+
+function SettingsRow({ row, last }: { row: Row; last?: boolean }) {
+  const Icon = row.icon
+  return (
+    <button
+      className={cn(
+        "w-full flex items-center gap-3.5 px-3 py-2.5 hover:bg-secondary/30 active:bg-secondary/50 transition-colors text-left",
+        !last && "border-b border-border/30"
+      )}
+    >
+      <div className={cn("w-9 h-9 rounded-lg flex items-center justify-center shrink-0", row.iconBg)}>
+        <Icon className={cn("h-5 w-5", row.iconColor ?? "text-white")} fill={row.icon === Star ? "currentColor" : "none"} />
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-[15px] text-foreground leading-tight">{row.label}</p>
+        {row.subtitle && (
+          <p className="text-[13px] text-muted-foreground mt-0.5 truncate">{row.subtitle}</p>
+        )}
+      </div>
+    </button>
+  )
+}
 
 export function SettingsPage({ isOpen, onClose }: SettingsPageProps) {
   const { profile, setAvatarUrl } = useUser()
-  const [isHeaderStuck, setIsHeaderStuck] = useState(false)
-  const scrollRef = useRef<HTMLDivElement>(null)
-  const sentinelRef = useRef<HTMLDivElement>(null)
-  const coverInputRef = useRef<HTMLInputElement>(null)
-  const [coverUrl, setCoverUrl] = useState<string | null>(null)
-
-  // Detect when the top hero section scrolls past to show sticky header
-  useEffect(() => {
-    const scrollEl = scrollRef.current
-    if (!scrollEl) return
-    const onScroll = () => {
-      setIsHeaderStuck(scrollEl.scrollTop > 220)
-    }
-    scrollEl.addEventListener("scroll", onScroll, { passive: true })
-    return () => scrollEl.removeEventListener("scroll", onScroll)
-  }, [isOpen])
-
-  // Reset scroll on open
-  useEffect(() => {
-    if (isOpen && scrollRef.current) {
-      scrollRef.current.scrollTop = 0
-      setIsHeaderStuck(false)
-    }
-  }, [isOpen])
-
-  function handleCoverChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0]
-    if (!file) return
-    const url = URL.createObjectURL(file)
-    setCoverUrl(url)
-  }
+  const avatarInputRef = useRef<HTMLInputElement>(null)
+  const [scrolled, setScrolled] = useState(false)
 
   function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
-    const url = URL.createObjectURL(file)
-    setAvatarUrl(url)
+    setAvatarUrl(URL.createObjectURL(file))
   }
 
   return (
-    <>
-      {/* Full-screen panel */}
+    <div
+      style={{ zIndex: 80 }}
+      className={cn(
+        "fixed inset-0 flex flex-col bg-background transition-transform duration-300 ease-in-out",
+        isOpen ? "translate-x-0" : "translate-x-full"
+      )}
+    >
+      {/* Top bar */}
       <div
-        style={{ zIndex: 80 }}
         className={cn(
-          "fixed inset-0 flex flex-col bg-background transition-transform duration-300 ease-in-out",
-          isOpen ? "translate-x-0" : "translate-x-full"
+          "sticky top-0 z-10 flex items-center gap-3 px-2 py-3 transition-colors",
+          scrolled ? "bg-card/95 backdrop-blur border-b border-border/40" : "bg-background"
         )}
       >
-        {/* Sticky header — visible only when scrolled past hero */}
-        <div
-          className={cn(
-            "absolute top-0 left-0 right-0 z-10 flex items-center gap-3 px-4 py-3 bg-sky-700 transition-opacity duration-200",
-            isHeaderStuck ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-          )}
-        >
-          <button onClick={onClose} aria-label="Back" className="p-1 text-white">
-            <ArrowLeft className="h-6 w-6" />
-          </button>
-          <div className="flex-1 min-w-0">
-            <p className="text-white font-semibold text-[16px] leading-tight truncate">{profile.name}</p>
-            <p className="text-sky-200 text-xs">online</p>
+        <button onClick={onClose} aria-label="Back" className="p-2 text-foreground">
+          <ArrowLeft className="h-6 w-6" />
+        </button>
+        {scrolled && (
+          <h1 className="flex-1 text-[20px] font-semibold text-foreground">Settings</h1>
+        )}
+        {!scrolled && <div className="flex-1" />}
+        <button aria-label="Search" className="p-2 text-foreground">
+          <Search className="h-5 w-5" />
+        </button>
+        <button aria-label="More" className="p-2 text-foreground">
+          <MoreVertical className="h-5 w-5" />
+        </button>
+      </div>
+
+      {/* Scrollable content */}
+      <div
+        className="flex-1 overflow-y-auto pb-8"
+        onScroll={(e) => setScrolled((e.target as HTMLDivElement).scrollTop > 120)}
+      >
+        {/* Profile hero */}
+        <div className="flex flex-col items-center pt-2 pb-6">
+          <div className="relative">
+            <div className="w-28 h-28 rounded-full overflow-hidden bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center text-white text-4xl font-bold">
+              {profile.avatarUrl ? (
+                <img src={profile.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+              ) : (
+                <span>{profile.name.charAt(0)}</span>
+              )}
+            </div>
+            <button
+              onClick={() => avatarInputRef.current?.click()}
+              aria-label="Change avatar"
+              className="absolute -bottom-1 right-0 w-9 h-9 rounded-full bg-sky-500 border-[3px] border-background flex items-center justify-center"
+            >
+              <Camera className="h-4 w-4 text-white" />
+            </button>
+            <input ref={avatarInputRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarChange} />
           </div>
-          <button aria-label="Search" className="p-1 text-white">
-            <Search className="h-5 w-5" />
-          </button>
-          <button aria-label="More options" className="p-1 text-white">
-            <MoreVertical className="h-5 w-5" />
-          </button>
+          <h2 className="mt-4 text-[22px] font-bold text-foreground">{profile.name}</h2>
+          <p className="text-[15px] text-muted-foreground mt-0.5">{profile.username}</p>
         </div>
 
-        {/* Scrollable content */}
-        <div ref={scrollRef} className="flex-1 overflow-y-auto">
+        {/* Accounts */}
+        <SectionCard label="Accounts">
+          <button className="w-full flex items-center gap-3.5 px-3 py-2.5 hover:bg-secondary/30 active:bg-secondary/50 transition-colors text-left">
+            <div className="w-9 h-9 rounded-full overflow-hidden bg-gradient-to-br from-rose-400 to-rose-700 shrink-0" />
+            <span className="flex-1 text-[15px] text-foreground">.</span>
+            <span className="min-w-[28px] h-[22px] rounded-full bg-sky-500 text-white text-xs font-medium flex items-center justify-center px-2">61</span>
+            <ChevronRight className="h-4 w-4 text-muted-foreground" />
+          </button>
+        </SectionCard>
 
-          {/* Hero cover photo */}
-          <div className="relative h-72 bg-gradient-to-br from-slate-700 to-slate-900 overflow-hidden">
-            {coverUrl ? (
-              <img src={coverUrl} alt="Cover" className="w-full h-full object-cover" />
-            ) : profile.avatarUrl ? (
-              <img src={profile.avatarUrl} alt="Cover" className="w-full h-full object-cover" />
-            ) : (
-              <div className="w-full h-full bg-gradient-to-br from-green-600 to-green-900 flex items-center justify-center">
-                <span className="text-white text-7xl font-bold opacity-30">{profile.name.charAt(0)}</span>
-              </div>
-            )}
+        {/* Plus group */}
+        <SectionCard>
+          {plusItems.map((r, i) => (
+            <SettingsRow key={r.label} row={r} last={i === plusItems.length - 1} />
+          ))}
+        </SectionCard>
 
-            {/* Back button */}
-            <button
-              onClick={onClose}
-              aria-label="Back"
-              className="absolute top-4 left-4 p-1.5 rounded-full bg-black/30 text-white"
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </button>
+        {/* Main settings */}
+        <SectionCard>
+          {mainItems.map((r, i) => (
+            <SettingsRow key={r.label} row={r} last={i === mainItems.length - 1} />
+          ))}
+        </SectionCard>
 
-            {/* Top right icons */}
-            <div className="absolute top-4 right-4 flex items-center gap-2">
-              <span className="text-white/80 text-sm font-medium">1/21</span>
-              <button aria-label="QR" className="p-1 text-white/80">
-                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={1.8}>
-                  <rect x="3" y="3" width="7" height="7" rx="1" />
-                  <rect x="14" y="3" width="7" height="7" rx="1" />
-                  <rect x="3" y="14" width="7" height="7" rx="1" />
-                  <rect x="14" y="14" width="3" height="3" />
-                  <rect x="18" y="14" width="3" height="3" />
-                  <rect x="14" y="18" width="3" height="3" />
-                  <rect x="18" y="18" width="3" height="3" />
-                </svg>
-              </button>
-              <button aria-label="More" className="p-1 text-white/80">
-                <MoreVertical className="h-5 w-5" />
-              </button>
-            </div>
+        {/* Premium */}
+        <SectionCard>
+          {premiumItems.map((r, i) => (
+            <SettingsRow key={r.label} row={r} last={i === premiumItems.length - 1} />
+          ))}
+        </SectionCard>
 
-            {/* Name overlay at bottom */}
-            <div className="absolute bottom-0 left-0 right-0 px-4 pb-4 bg-gradient-to-t from-black/70 to-transparent pt-12">
-              <h1 className="text-white text-2xl font-bold leading-tight">{profile.name}</h1>
-              <div className="flex items-center gap-1.5 mt-0.5">
-                <div className="w-5 h-5 rounded-sm bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
-                  <span className="text-white text-[8px] font-bold">D</span>
-                </div>
-                <span className="text-white/70 text-sm">public photo</span>
-              </div>
-            </div>
+        {/* Help */}
+        <SectionCard label="Help">
+          {helpItems.map((r, i) => (
+            <SettingsRow key={r.label} row={r} last={i === helpItems.length - 1} />
+          ))}
+        </SectionCard>
 
-            {/* Camera FAB */}
-            <button
-              onClick={() => coverInputRef.current?.click()}
-              aria-label="Change cover photo"
-              className="absolute bottom-4 right-4 w-14 h-14 rounded-2xl bg-sky-500 flex items-center justify-center shadow-lg active:bg-sky-600 transition-colors"
-            >
-              <Camera className="h-6 w-6 text-white" />
-              <span className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-white flex items-center justify-center">
-                <span className="text-sky-500 text-[10px] font-bold">+</span>
-              </span>
-            </button>
-            <input ref={coverInputRef} type="file" accept="image/*" className="hidden" onChange={handleCoverChange} />
-          </div>
-
-          {/* Account section */}
-          <div className="bg-card">
-            <p className="px-4 pt-5 pb-2 text-sky-400 text-[13px] font-semibold tracking-wide uppercase">Account</p>
-
-            {/* Phone */}
-            <button className="w-full px-4 py-3.5 flex flex-col items-start border-b border-border/40 hover:bg-secondary/30 transition-colors active:bg-secondary/50">
-              <span className="text-[15px] text-foreground font-medium">Mobile hidden</span>
-              <span className="text-[13px] text-muted-foreground mt-0.5">Tap to change phone number</span>
-            </button>
-
-            {/* Username */}
-            <button className="w-full px-4 py-3.5 flex flex-col items-start border-b border-border/40 hover:bg-secondary/30 transition-colors active:bg-secondary/50">
-              <span className="text-[15px] text-foreground font-medium">{profile.username}</span>
-              <span className="text-[13px] text-muted-foreground mt-0.5">Username</span>
-            </button>
-
-            {/* DC */}
-            <button className="w-full px-4 py-3.5 flex flex-col items-start border-b border-border/40 hover:bg-secondary/30 transition-colors active:bg-secondary/50">
-              <span className="text-[15px] text-foreground font-medium">6121637257</span>
-              <span className="text-[13px] text-muted-foreground mt-0.5">DC5, Singapore, SG</span>
-            </button>
-
-            {/* Bio */}
-            <button className="w-full px-4 py-3.5 flex flex-col items-start hover:bg-secondary/30 transition-colors active:bg-secondary/50">
-              <span className="text-[15px] text-foreground font-medium text-left leading-relaxed">
-                {profile.bio.split("@").map((part, i) =>
-                  i === 0 ? part : (
-                    <span key={i}>
-                      <span className="text-sky-400">@{part.split(" ")[0]}</span>
-                      {" " + part.split(" ").slice(1).join(" ")}
-                    </span>
-                  )
-                )}
-              </span>
-              <span className="text-[13px] text-muted-foreground mt-0.5">Bio</span>
-            </button>
-          </div>
-
-          {/* Settings section */}
-          <div className="bg-card mt-3">
-            <p className="px-4 pt-5 pb-2 text-sky-400 text-[13px] font-semibold tracking-wide uppercase">Settings</p>
-
-            {settingsItems.map(({ icon: Icon, label, value, valueColor }, i) => (
-              <button
-                key={label}
-                className={cn(
-                  "w-full flex items-center gap-4 px-4 py-4 hover:bg-secondary/30 transition-colors active:bg-secondary/50",
-                  i < settingsItems.length - 1 && "border-b border-border/40"
-                )}
-              >
-                <Icon className="h-5 w-5 text-muted-foreground flex-shrink-0" />
-                <span className="flex-1 text-left text-[15px] text-foreground">{label}</span>
-                {value && (
-                  <span className={cn("text-[14px] font-medium", valueColor ?? "text-muted-foreground")}>
-                    {value}
-                  </span>
-                )}
-              </button>
-            ))}
-          </div>
-
-          {/* Premium section */}
-          <div className="bg-card mt-3 mb-8">
-            {premiumItems.map(({ label, isPremium, isStars, isBusiness, isGift }, i) => (
-              <button
-                key={label}
-                className={cn(
-                  "w-full flex items-center gap-4 px-4 py-4 hover:bg-secondary/30 transition-colors active:bg-secondary/50",
-                  i < premiumItems.length - 1 && "border-b border-border/40"
-                )}
-              >
-                {/* Custom icons for premium items */}
-                {isPremium && (
-                  <Star className="h-5 w-5 text-violet-400 fill-violet-400 flex-shrink-0" />
-                )}
-                {isStars && (
-                  <Star className="h-5 w-5 text-amber-400 fill-amber-400 flex-shrink-0" />
-                )}
-                {isBusiness && (
-                  <Building2 className="h-5 w-5 text-muted-foreground flex-shrink-0" />
-                )}
-                {isGift && (
-                  <Gift className="h-5 w-5 text-muted-foreground flex-shrink-0" />
-                )}
-                <span className="flex-1 text-left text-[15px] text-foreground">{label}</span>
-              </button>
-            ))}
-          </div>
+        {/* Footer */}
+        <div className="text-center mt-6 px-4">
+          <p className="text-[13px] text-muted-foreground">Plus Messenger for Android</p>
+          <p className="text-[13px] text-muted-foreground">v12.6.4.1 (2218) universal arm64-v8a</p>
         </div>
       </div>
-    </>
+    </div>
   )
 }
